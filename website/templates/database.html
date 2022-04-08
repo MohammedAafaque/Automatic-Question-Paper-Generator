@@ -1,0 +1,23 @@
+<h1>Users</h1>
+{% for user in users %}
+<p>
+  Id:{{user.id}}, Email:{{user.email}}, Password: {{user.password}}, Full Name:
+  {{user.full_name}}, Semesters: {{user.sems}}
+</p>
+{% endfor %}
+
+<h1>Semesters</h1>
+{% for sem in sems %}
+<p>
+  Id:{{sem.id}}, Sem:{{sem.sem}}, User Id: {{sem.user_id}}, Subjects:
+  {{sem.subs}}
+</p>
+{% endfor %}
+
+<h1>Subjects</h1>
+{% for sub in subs %}
+<p>
+  Id:{{sub.id}}, Subject Name:{{sub.subject_ame}}, Semester Id:
+  {{sub.semester_id}}, Modules: {{sub.mods}}
+</p>
+{% endfor %}

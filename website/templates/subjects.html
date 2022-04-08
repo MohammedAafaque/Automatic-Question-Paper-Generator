@@ -1,0 +1,35 @@
+{% extends "base.html" %} {% block title %}Modules{% endblock %}{% block content
+%}
+<h1 align="center">Subjects</h1>
+<h1 align="center">Semester: {{sem.sem}}</h1>
+<ul class="list-group list-group-flush" id="subjects">
+  {% for sub in sem.subs %}
+  <li class="list-group-item">
+    <!-- <div onClick="showSubjects({{sem.id}})"> -->
+    {{ sub.subject_ame }}
+    <!-- </div> -->
+    <button
+      type="button"
+      class="close"
+      onClick="deleteSub({{ sub.id }}, {{ sub.semester_id }})"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <button
+      type="button"
+      class="close"
+      onClick="updateSub({{ sub.id }}, {{ sub.semester_id }})"
+    >
+      <span aria-hidden="true">Click Me</span>
+    </button>
+  </li>
+  {% endfor %}
+</ul>
+
+<form method="POST">
+  <textarea name="sub" id="sub" class="form-control"></textarea>
+  <div align="" center>
+    <button type="submit" class="btn btn-primary">Add Subject</button>
+  </div>
+</form>
+{% endblock %}
