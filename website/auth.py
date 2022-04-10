@@ -1,5 +1,5 @@
 from flask import Blueprint, redirect, render_template, request, flash, url_for
-from .models import User, Semester, Subject, Module
+from .models import User, Semester, Subject, Module, Question
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from flask_login import login_user, logout_user, login_required, current_user
@@ -17,7 +17,7 @@ def login():
             if check_password_hash(user.password, password):
                 login_user(user, remember=True)
                 flash('Logged in successfully!', category='success')
-                return redirect(url_for('views.home'))
+                return redirect(url_for('views.dashboard'))
             else:
                 flash('Incorrect password, try again.', category='error')
                 return redirect(url_for('auth.login'))
@@ -67,7 +67,7 @@ def sign_up():
                 db.session.commit()
                 login_user(new_user, remember=True)
                 flash('Account created!', category='succes')
-                return redirect(url_for('views.home'))
+                return redirect(url_for('views.dashboard'))
             except Exception as e:
                     flash(e, category='error')
         
@@ -75,4 +75,4 @@ def sign_up():
 
 @auth.route('/database')
 def database():
-    return render_template("database.html", users=User.query.all(), sems=Semester.query.all(), subs=Subject.query.all(), mods=Module.query.all())
+    return render_template("database.html", users=User.query.all(), sems=Semester.query.all(), subs=Subject.query.all(), mods=Module.query.all(), ques=Question.query.all())

@@ -30,3 +30,12 @@
 </p>
 
 {% endfor %}
+
+<h1>Questions</h1>
+{% for que in ques %}
+<p>
+  Id:{{que.id}}, Question:{{que.question_content}}, Classification:
+  {{que.question_category}} , Module Id: {{que.module_id}}
+</p>
+
+{% endfor %}

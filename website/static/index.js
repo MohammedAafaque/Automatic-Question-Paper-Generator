@@ -96,3 +96,7 @@ function updateQuestion(quesId, modId, semId, subId) {
     });
   }
 }
+
+function goToSem() {
+  window.location.href = "/semester";
+}

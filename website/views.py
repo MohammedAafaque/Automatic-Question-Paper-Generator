@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, jsonify
+from flask import Blueprint, redirect, render_template, request, flash, jsonify, url_for
 from flask_login import login_required, current_user
 from . import db
 import json
@@ -7,7 +7,18 @@ from website.models import Semester, Subject, Module, Question
 
 views = Blueprint('views', __name__)
 
+@views.route('/')
+def landing():
+    if current_user.is_authenticated:
+        return redirect(url_for('views.dashboard'))
+    else:
+        return render_template("landing.html", user=current_user)
 
+@views.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template("dashboard.html", user=current_user)
+    
 
 @views.route('/semester', methods=['GET', 'POST'])
 @login_required
