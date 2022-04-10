@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from . import db
 import json
 
-from website.models import Semester, Subject
+from website.models import Semester, Subject, Module, Question
 
 views = Blueprint('views', __name__)
 
@@ -81,5 +81,82 @@ def update_sub():
     sub = Subject.query.get(subId)
     if sub:
             sub.subject_ame = updatedField
+            db.session.commit()
+    return jsonify({})
+
+@views.route('/semester/<semId>/<subId>', methods=['GET', 'POST'])
+@login_required
+def modules(semId, subId):
+    if request.method == 'POST':
+        module = request.form.get('mod')
+        if len(module) < 1:
+            flash('Module name should be of at least 1 character.', category="error")
+        else:
+            new_mod = Module(module_name=module, subject_id=subId)
+            db.session.add(new_mod)
+            db.session.commit()
+            flash("Module added successfully!", category='success')
+
+    sub = Subject.query.filter_by(id=subId).first()
+    sem = Semester.query.filter_by(id=semId).first()
+    return render_template("modules.html", user=current_user, sub=sub, sem=sem)
+
+@views.route('/delete-mod', methods=['POST'])
+def delete_mod():
+    mod = json.loads(request.data)
+    modId = mod['modId']
+    mod = Module.query.get(modId)
+    if mod:
+            db.session.delete(mod)
+            db.session.commit()
+    return jsonify({})
+
+@views.route('/update-mod', methods=['POST'])
+def update_mod():
+    newMod = json.loads(request.data)
+    modId = newMod['modId']
+    updatedField = newMod['updatedMod']
+    mod = Module.query.get(modId)
+    if mod:
+            mod.module_name = updatedField
+            db.session.commit()
+    return jsonify({})
+
+@views.route('/semester/<semId>/<subId>/<modId>', methods=['GET', 'POST'])
+@login_required
+def questions(semId, subId, modId):
+    if request.method == 'POST':
+        question = request.form.get('question')
+        if len(question) < 4:
+            flash('Question should be of at least 4 characters.', category="error")
+        else:
+            new_ques = Question(question_content=question, module_id=modId)
+            db.session.add(new_ques)
+            db.session.commit()
+            flash("Question added successfully!", category='success')
+
+    mod = Module.query.filter_by(id=modId).first()
+    sub = Subject.query.filter_by(id=subId).first()
+    sem = Semester.query.filter_by(id=semId).first()
+    return render_template("questions.html", user=current_user, mod=mod, sub=sub, sem=sem)
+
+@views.route('/delete-question', methods=['POST'])
+def delete_question():
+    ques = json.loads(request.data)
+    quesId = ques['quesId']
+    ques = Question.query.get(quesId)
+    if ques:
+            db.session.delete(ques)
+            db.session.commit()
+    return jsonify({})
+
+@views.route('/update-question', methods=['POST'])
+def update_question():
+    newQues = json.loads(request.data)
+    quesId = newQues['quesId']
+    updatedField = newQues['updatedQuestion']
+    ques = Question.query.get(quesId)
+    if ques:
+            ques.question_content = updatedField
             db.session.commit()
     return jsonify({})

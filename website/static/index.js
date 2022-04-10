@@ -43,3 +43,56 @@ function updateSub(subId, semId) {
     });
   }
 }
+
+function showModules(subId, semId) {
+  window.location.href = "/semester/" + semId + "/" + subId;
+}
+
+function deleteMod(modId, subId, semId) {
+  fetch("/delete-mod", {
+    method: "POST",
+    body: JSON.stringify({ modId: modId }),
+  }).then((_res) => {
+    window.location.href = "/semester/" + semId + "/" + subId;
+  });
+}
+
+function updateMod(modId, subId, semId) {
+  const updatedMod = window.prompt("Enter Updated Module");
+  if (updatedMod) {
+    fetch("/update-mod", {
+      method: "POST",
+      body: JSON.stringify({ modId: modId, updatedMod: updatedMod }),
+    }).then((_res) => {
+      window.location.href = "/semester/" + semId + "/" + subId;
+    });
+  }
+}
+
+function showQuestions(modId, subId, semId) {
+  window.location.href = "/semester/" + semId + "/" + subId + "/" + modId;
+}
+
+function deleteQuestion(quesId, modId, semId, subId) {
+  fetch("/delete-question", {
+    method: "POST",
+    body: JSON.stringify({ quesId: quesId }),
+  }).then((_res) => {
+    window.location.href = "/semester/" + semId + "/" + subId + "/" + modId;
+  });
+}
+
+function updateQuestion(quesId, modId, semId, subId) {
+  const updatedQuestion = window.prompt("Enter Updated Question");
+  if (updatedQuestion) {
+    fetch("/update-question", {
+      method: "POST",
+      body: JSON.stringify({
+        quesId: quesId,
+        updatedQuestion: updatedQuestion,
+      }),
+    }).then((_res) => {
+      window.location.href = "/semester/" + semId + "/" + subId + "/" + modId;
+    });
+  }
+}

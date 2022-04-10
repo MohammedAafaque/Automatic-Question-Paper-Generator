@@ -21,3 +21,12 @@
   {{sub.semester_id}}, Modules: {{sub.mods}}
 </p>
 {% endfor %}
+
+<h1>Modules</h1>
+{% for mod in mods %}
+<p>
+  Id:{{mod.id}}, Module Name:{{mod.module_name}}, Subject Id:
+  {{mod.subject_id}}, Questions: {{mod.questions}}
+</p>
+
+{% endfor %}

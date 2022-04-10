@@ -1,0 +1,37 @@
+{% extends "base.html" %} {% block title %}Modules{% endblock %}{% block content
+%}
+<h1 align="center">Modules</h1>
+<h1 align="center">Subject: {{sub.subject_ame}}</h1>
+<ul class="list-group list-group-flush" id="subjects">
+  {% for mod in sub.mods %}
+  <li class="list-group-item">
+    <div
+      onClick="showQuestions({{mod.id}}, {{ mod.subject_id }}, {{ sem.id }})"
+    >
+      {{ mod.module_name }}
+    </div>
+    <button
+      type="button"
+      class="close"
+      onClick="deleteMod({{ mod.id }}, {{ mod.subject_id }}, {{ sem.id }})"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <button
+      type="button"
+      class="close"
+      onClick="updateMod({{ mod.id }}, {{ mod.subject_id }}, {{ sem.id }})"
+    >
+      <span aria-hidden="true">Click Me</span>
+    </button>
+  </li>
+  {% endfor %}
+</ul>
+
+<form method="POST">
+  <textarea name="mod" id="mod" class="form-control"></textarea>
+  <div align="" center>
+    <button type="submit" class="btn btn-primary">Add Module</button>
+  </div>
+</form>
+{% endblock %}
