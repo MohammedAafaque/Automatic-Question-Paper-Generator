@@ -171,3 +171,15 @@ def update_question():
             ques.question_content = updatedField
             db.session.commit()
     return jsonify({})
+
+@views.route('/generate')
+def generate():
+    id = current_user.id
+    sems = Semester.query.filter_by(user_id=id)
+    return render_template("select_sem.html", user=current_user, sems=sems)
+
+@views.route('/generate/<semId>')
+def showSubs(semId):
+    subs = Subject.query.filter_by(semester_id=semId)
+    return render_template("select_sub.html", user=current_user, subs=subs)
+

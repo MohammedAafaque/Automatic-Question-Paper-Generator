@@ -1,0 +1,6 @@
+{% extends "base.html" %} {% block title %} Generate Question Paper {% endblock
+%} {% block content %}
+<div>Select Semester</div>
+{% for sem in sems %}
+<div class="semList" onClick="displaySubs({{sem.id}})">{{sem.sem}}</div>
+{% endfor %} {% endblock %}

@@ -100,3 +100,11 @@ function updateQuestion(quesId, modId, semId, subId) {
 function goToSem() {
   window.location.href = "/semester";
 }
+
+function goToGenerate() {
+  window.location.href = "/generate";
+}
+
+function displaySubs(semId) {
+  window.location.href = "/generate/" + semId;
+}
