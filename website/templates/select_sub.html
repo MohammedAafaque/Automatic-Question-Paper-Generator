@@ -2,5 +2,7 @@
 block content %}
 <div>Select Subject</div>
 {% for sub in subs %}
-<div class="subList">{{sub.subject_ame}}</div>
+<div class="subList" onClick="displayCreateTemplate({{sub.id}}, {{semId}})">
+  {{sub.subject_ame}}
+</div>
 {% endfor %} {% endblock %}

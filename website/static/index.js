@@ -108,3 +108,7 @@ function goToGenerate() {
 function displaySubs(semId) {
   window.location.href = "/generate/" + semId;
 }
+
+function displayCreateTemplate(subId, semId) {
+  window.location.href = "/generate/" + semId + "/" + subId;
+}

@@ -1,0 +1,15 @@
+{% extends "base.html" %} {% block title %} Create Template {% endblock %} {%
+block content %}
+<form method="POST">
+  <select name="modules" id="modules-list">
+    {% for mod in sub.mods %}
+    <option value="{{ mod.module_name }}">{{ mod.module_name }}</option>
+    {% endfor %}
+  </select>
+  <select name="marks" id="marks-list">
+    {% for i in range(21) %}
+    <option>{{ i }}</option>
+    {% endfor %}
+  </select>
+</form>
+{% endblock %}

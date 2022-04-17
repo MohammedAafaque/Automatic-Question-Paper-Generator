@@ -152,6 +152,7 @@ def questions(semId, subId, modId):
     return render_template("questions.html", user=current_user, mod=mod, sub=sub, sem=sem)
 
 @views.route('/delete-question', methods=['POST'])
+@login_required
 def delete_question():
     ques = json.loads(request.data)
     quesId = ques['quesId']
@@ -162,6 +163,7 @@ def delete_question():
     return jsonify({})
 
 @views.route('/update-question', methods=['POST'])
+@login_required
 def update_question():
     newQues = json.loads(request.data)
     quesId = newQues['quesId']
@@ -173,13 +175,23 @@ def update_question():
     return jsonify({})
 
 @views.route('/generate')
+@login_required
 def generate():
     id = current_user.id
     sems = Semester.query.filter_by(user_id=id)
     return render_template("select_sem.html", user=current_user, sems=sems)
 
 @views.route('/generate/<semId>')
+@login_required
 def showSubs(semId):
     subs = Subject.query.filter_by(semester_id=semId)
-    return render_template("select_sub.html", user=current_user, subs=subs)
+    return render_template("select_sub.html", user=current_user, subs=subs, semId=semId)
 
+@views.route('generate/<semId>/<subId>')
+@login_required
+def createTemplate(semId, subId):
+    sub = Subject.query.filter_by(id=subId).first()
+    if sub:
+        return render_template("createTemplate.html", sub=sub, user=current_user)
+    else:
+        return render_template("database.html", user=current_user)
