@@ -1,6 +1,20 @@
 from . import db
 from flask_login import UserMixin
 
+# class Subquestion(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+
+
+class Template(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    totalQ = db.Column(db.Integer)
+    compulsoryQ = db.Column(db.Integer)
+    optionalQ = db.Column(db.Integer)
+    marks = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    
+
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question_content = db.Column(db.String(500))

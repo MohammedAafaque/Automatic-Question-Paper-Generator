@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from . import db
 import json
 
-from website.models import Semester, Subject, Module, Question
+from website.models import Semester, Subject, Module, Question, Template
 
 views = Blueprint('views', __name__)
 
@@ -187,11 +187,28 @@ def showSubs(semId):
     subs = Subject.query.filter_by(semester_id=semId)
     return render_template("select_sub.html", user=current_user, subs=subs, semId=semId)
 
-@views.route('generate/<semId>/<subId>')
+@views.route('generate/<semId>/<subId>', methods=['GET', 'POST'])
 @login_required
 def createTemplate(semId, subId):
+    if request.method == 'POST':
+        i=1
+        user=current_user
+        name = request.form.get('templateName')
+        total = request.form.get('totalQuestions')
+        compulsory = request.form.get('compulsoryQuestions')
+        optional = request.form.get('optionalQuestions')
+        marks = request.form.get('marks')
+
+        if len(name)<1:
+            flash("Template name should be of at least 1 character", category="success")
+        # elif ((compulsory+optional) != total):
+        #     flash("Total questions are not equal to compulsory & optional questions", category="error")
+        else:    
+            new_template = Template(name=name, totalQ=total, compulsoryQ=compulsory, optionalQ=optional, marks=marks,user_id=user.id )
+            db.session.add(new_template)
+            db.session.commit()
+            return render_template("subQuestions.html", name=name, total=total, compulsory=compulsory, optional=optional, marks=marks, user=user)
+
     sub = Subject.query.filter_by(id=subId).first()
     if sub:
-        return render_template("createTemplate.html", sub=sub, user=current_user)
-    else:
-        return render_template("database.html", user=current_user)
+        return render_template("formatInfo.html", sub=sub, user=current_user)

@@ -39,3 +39,12 @@
 </p>
 
 {% endfor %}
+<h1>Templates</h1>
+{% for temp in temps %}
+<p>
+  Id:{{temp.id}}, Name:{{temp.name}}, Total:{{temp.totalQ}},
+  Compulsory:{{temp.compulsoryQ}}, Optional:{{temp.optionalQ}},
+  Marks:{{temp.marks}}, User Id:{{temp.user_id}}
+</p>
+
+{% endfor %}
