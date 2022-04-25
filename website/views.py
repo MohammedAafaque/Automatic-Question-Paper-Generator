@@ -1,9 +1,10 @@
+from typing import Optional
 from flask import Blueprint, redirect, render_template, request, flash, jsonify, url_for
 from flask_login import login_required, current_user
 from . import db
 import json
 
-from website.models import Semester, Subject, Module, Question, Template
+from website.models import Semester, Subject, Module, Question, Subquestion, Template
 
 views = Blueprint('views', __name__)
 
@@ -187,17 +188,24 @@ def showSubs(semId):
     subs = Subject.query.filter_by(semester_id=semId)
     return render_template("select_sub.html", user=current_user, subs=subs, semId=semId)
 
-@views.route('generate/<semId>/<subId>', methods=['GET', 'POST'])
+@views.route('/generate/<semId>/<subId>')
+@login_required
+def displayTemplates(semId, subId):
+    temps = Template.query.filter_by(user_id=current_user.id)
+    return render_template("displayTemplates.html", user=current_user, temps=temps, semId=semId, subId=subId)
+    # temps = Template.query.filter_by(user_id=current_user.id)
+    # return render_template("displayTemplates.html", user=current_user, temps=temps, semId=semId, subId=subId)
+
+@views.route('/generate/<semId>/<subId>/create', methods=['GET', 'POST'])
 @login_required
 def createTemplate(semId, subId):
     if request.method == 'POST':
-        i=1
         user=current_user
         name = request.form.get('templateName')
-        total = request.form.get('totalQuestions')
-        compulsory = request.form.get('compulsoryQuestions')
-        optional = request.form.get('optionalQuestions')
-        marks = request.form.get('marks')
+        total = int(request.form.get('totalQuestions'))
+        compulsory = int(request.form.get('compulsoryQuestions'))
+        optional = int(request.form.get('optionalQuestions'))
+        marks = int(request.form.get('marks'))
 
         if len(name)<1:
             flash("Template name should be of at least 1 character", category="success")
@@ -207,8 +215,25 @@ def createTemplate(semId, subId):
             new_template = Template(name=name, totalQ=total, compulsoryQ=compulsory, optionalQ=optional, marks=marks,user_id=user.id )
             db.session.add(new_template)
             db.session.commit()
-            return render_template("subQuestions.html", name=name, total=total, compulsory=compulsory, optional=optional, marks=marks, user=user)
+            return redirect(url_for('views.displayTemplates', semId=semId, subId=subId))
 
     sub = Subject.query.filter_by(id=subId).first()
     if sub:
         return render_template("formatInfo.html", sub=sub, user=current_user)
+
+@views.route('/generate/<semId>/<subId>/<tempId>', methods=['POST', 'GET'])
+@login_required
+def addSubquestion(semId, subId, tempId):
+    if request.method == 'POST':
+        data = request.form
+        for key in data:
+            new_question = Subquestion(question_number=key, subquestions=data[key], template_id=tempId)
+            db.session.add(new_question)
+            db.session.commit()
+        return redirect(url_for('views.dashboard'))
+
+    temp = Template.query.filter_by(id=tempId).first()
+    compul = temp.compulsoryQ
+    opt = temp.optionalQ
+    if temp:
+        return render_template("subQuestions.html", user=current_user, semId=semId, subId=subId, tempId=tempId, temp=temp, compul=compul, opt=opt)

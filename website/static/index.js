@@ -112,3 +112,11 @@ function displaySubs(semId) {
 function displayCreateTemplate(subId, semId) {
   window.location.href = "/generate/" + semId + "/" + subId;
 }
+
+function addTemplate(semId, subId) {
+  window.location.href = "/generate/" + semId + "/" + subId + "/create";
+}
+
+function addSubquestions(tempId, semId, subId) {
+  window.location.href = "/generate/" + semId + "/" + subId + "/" + tempId;
+}

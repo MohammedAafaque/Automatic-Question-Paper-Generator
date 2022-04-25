@@ -1,0 +1,11 @@
+{% extends "base.html" %} {% block title %} Display Templates {% endblock %} {%
+block content %}
+<div>
+  {% for temp in temps %}
+  <div onClick="addSubquestions({{temp.id}}, {{semId}}, {{subId}})">
+    {{ temp.name }}
+  </div>
+  {% endfor %}
+  <div onClick="addTemplate({{semId}}, {{subId}})">Add template</div>
+</div>
+{% endblock %}

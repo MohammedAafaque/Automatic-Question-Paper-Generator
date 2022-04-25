@@ -1,5 +1,5 @@
 from flask import Blueprint, redirect, render_template, request, flash, url_for
-from .models import User, Semester, Subject, Module, Question, Template
+from .models import User, Semester, Subject, Module, Question, Template, Subquestion
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from flask_login import login_user, logout_user, login_required, current_user
@@ -73,6 +73,7 @@ def sign_up():
         
     return render_template("sign_up.html",user=current_user)
 
-@auth.route('/database')
+@auth.route('/database', methods=['GET', 'POST'])
 def database():
-    return render_template("database.html", users=User.query.all(), sems=Semester.query.all(), subs=Subject.query.all(), mods=Module.query.all(), ques=Question.query.all(), temps=Template.query.all())
+    return render_template("database.html", users=User.query.all(), sems=Semester.query.all(), subs=Subject.query.all(), mods=Module.query.all(), ques=Question.query.all(), temps=Template.query.all(), subques=Subquestion.query.all())
+

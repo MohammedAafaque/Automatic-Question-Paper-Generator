@@ -1,6 +1,6 @@
 {% extends "base.html" %} {% block title %} Create Template {% endblock %} {%
-block content %}
-<form method="POST">
+block content %} temp id: {{tempId}}
+<!-- <form method="POST">
   <select name="modules" id="modules-list">
     {% for mod in sub.mods %}
     <option value="{{ mod.module_name }}">{{ mod.module_name }}</option>
@@ -11,5 +11,5 @@ block content %}
     <option>{{ i }}</option>
     {% endfor %}
   </select>
-</form>
+</form> -->
 {% endblock %}

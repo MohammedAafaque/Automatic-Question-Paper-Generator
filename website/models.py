@@ -4,6 +4,12 @@ from flask_login import UserMixin
 # class Subquestion(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
 
+class Subquestion(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    question_number = db.Column(db.Integer)
+    subquestions = db.Column(db.Integer)
+    template_id = db.Column(db.Integer, db.ForeignKey('template.id'))
+
 
 class Template(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -13,6 +19,7 @@ class Template(db.Model):
     optionalQ = db.Column(db.Integer)
     marks = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    subquestions = db.relationship('Subquestion')
     
 
 class Question(db.Model):
@@ -48,3 +55,5 @@ class User(db.Model, UserMixin):
     department = db.Column(db.String(300))
     designation = db.Column(db.String(150))
     sems = db.relationship('Semester')
+
+

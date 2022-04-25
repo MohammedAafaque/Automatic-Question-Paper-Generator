@@ -1,8 +1,58 @@
 {% extends "base.html" %} {% block title %} Sub Questions {% endblock %} {%
 block content %}
-<div>{{name}}</div>
-<form method="POST">
+<div>{{temp.name}}</div>
+<form
+  onSubmit="submitSubQuestions({{tempId}}, {{semId}}, {{subId}})"
+  method="POST"
+>
   <h3 align="center">Enter number of sub questions</h3>
-  <div class="form-group">{{compulsory}}</div>
+
+  {% set comp = compul %} {% set op = opt %} {% set all = (2*op)+comp %}
+  <div class="form-group">
+    {% for i in range(comp) %}
+    <label for="{{i+1}}">Enter number of subquestions for Q{{i+1}} </label>
+    <input
+      type="number"
+      min="0"
+      max="10"
+      class="form-control"
+      id="{{i+1}}"
+      name="{{i+1}}"
+      placeholder="Enter number of subquestions"
+    />
+    {% endfor %}
+  </div>
+
+  <div class="form-group">
+    {% set count = namespace(value=1) %} {% for i in range(op) %}
+    <label for="{{comp+i+1}}"
+      >Enter number of subquestions for Q{{comp+i+count.value}}</label
+    >
+    <input
+      type="number"
+      min="0"
+      max="10"
+      class="form-control"
+      id="{{comp+i+count.value}}"
+      name="{{comp+i+count.value}}"
+      placeholder="Enter number of subquestions"
+    />
+
+    <div>OR</div>
+    <label for="{{comp+i+count.value+1}}"
+      >Enter number of subquestions for Q{{comp+i+count.value+1}}</label
+    >
+    <input
+      type="number"
+      min="0"
+      max="10"
+      class="form-control"
+      id="{{comp+i+count.value+1}}"
+      name="{{comp+i+count.value+1}}"
+      placeholder="Enter number of subquestions"
+    />
+    {% set count.value = count.value + 1 %} {% endfor %}
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 {% endblock %}

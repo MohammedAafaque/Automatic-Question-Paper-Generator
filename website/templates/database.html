@@ -46,5 +46,13 @@
   Compulsory:{{temp.compulsoryQ}}, Optional:{{temp.optionalQ}},
   Marks:{{temp.marks}}, User Id:{{temp.user_id}}
 </p>
+{% endfor %}
+
+<h1>Sub Questions</h1>
+{% for subque in subques %}
+<p>
+  Id:{{subque.id}}, Question Number:{{subque.question_number}},
+  Subquestions:{{subque.subquestions}}, Template Id:{{subque.template_id}}
+</p>
 
 {% endfor %}
