@@ -1,0 +1,16 @@
+{% extends "base.html" %} {% block title %} Set Template {% endblock %} {% block
+content %}
+<form>
+  {% for sub in subquestions %} {% if sub.question_number <= compulsory %}
+  <h1>Question {{sub.question_number}}</h1>
+  {% for i in range(sub.subquestions) %}
+  <input type="text" />
+  {% endfor %} {% else %}
+  <h1>Question {{sub.question_number}}</h1>
+  {% for i in range(sub.subquestions) %}
+  <input type="text" />
+  {% endfor %} {% if (sub.question_number - compulsory)%2 !=0 %}
+  <h4>OR</h4>
+  {% endif %} {% endif %} {% endfor %}
+</form>
+{% endblock %}

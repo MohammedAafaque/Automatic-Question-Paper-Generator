@@ -1,10 +1,7 @@
 {% extends "base.html" %} {% block title %} Sub Questions {% endblock %} {%
 block content %}
 <div>{{temp.name}}</div>
-<form
-  onSubmit="submitSubQuestions({{tempId}}, {{semId}}, {{subId}})"
-  method="POST"
->
+<form method="POST">
   <h3 align="center">Enter number of sub questions</h3>
 
   {% set comp = compul %} {% set op = opt %} {% set all = (2*op)+comp %}

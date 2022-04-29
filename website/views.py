@@ -230,10 +230,16 @@ def addSubquestion(semId, subId, tempId):
             new_question = Subquestion(question_number=key, subquestions=data[key], template_id=tempId)
             db.session.add(new_question)
             db.session.commit()
-        return redirect(url_for('views.dashboard'))
+        return redirect(url_for('views.setTemplate', semId=semId, subId=subId, tempId=tempId))
 
     temp = Template.query.filter_by(id=tempId).first()
     compul = temp.compulsoryQ
     opt = temp.optionalQ
     if temp:
         return render_template("subQuestions.html", user=current_user, semId=semId, subId=subId, tempId=tempId, temp=temp, compul=compul, opt=opt)
+
+@views.route('/generate/<semId>/<subId>/<tempId>/create')
+@login_required
+def setTemplate(semId, subId, tempId):
+    temp = Template.query.filter_by(id=tempId).first()
+    return render_template("setTemplate.html", user=current_user, subquestions=temp.subquestions, compulsory=temp.compulsoryQ, optional=temp.optionalQ)
