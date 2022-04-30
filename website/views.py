@@ -238,8 +238,12 @@ def addSubquestion(semId, subId, tempId):
     if temp:
         return render_template("subQuestions.html", user=current_user, semId=semId, subId=subId, tempId=tempId, temp=temp, compul=compul, opt=opt)
 
-@views.route('/generate/<semId>/<subId>/<tempId>/create')
+@views.route('/generate/<semId>/<subId>/<tempId>/create', methods=['POST', 'GET'])
 @login_required
 def setTemplate(semId, subId, tempId):
+    if request.method=='POST':
+        data = request.form
+        print(data)
     temp = Template.query.filter_by(id=tempId).first()
-    return render_template("setTemplate.html", user=current_user, subquestions=temp.subquestions, compulsory=temp.compulsoryQ, optional=temp.optionalQ)
+    sub = Subject.query.filter_by(id=subId).first()
+    return render_template("setTemplate.html", user=current_user, subquestions=temp.subquestions, compulsory=temp.compulsoryQ, optional=temp.optionalQ, subject=sub)
