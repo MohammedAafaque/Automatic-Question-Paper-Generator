@@ -1,0 +1,25 @@
+{% extends "base.html" %} {% block title %} Display Template {% endblock %} {%
+block content %} {% for sub in subquestions %} {% if sub.question_number <=
+compulsory %}
+<h1>Question {{sub.question_number}}</h1>
+{% set count = namespace(value=1) %} {% for queinfo in sub.subques %}
+<div>
+  <h5>{{count.value}}</h1>
+  Module: {{queinfo.module}} Marks: {{queinfo.marks}} Bloom's
+  Level:{{queinfo.bloom}}
+</div>
+{% set count.value = count.value + 1 %} {% endfor %}{% else %}
+<h1>Question {{sub.question_number}}</h1>
+{% set count = namespace(value=1) %} {% for queinfo in sub.subques %}
+<div>
+  <h5>{{count.value}}</h1>
+  Module: {{queinfo.module}} Marks: {{queinfo.marks}} Bloom's
+  Level:{{queinfo.bloom}}
+</div>
+{% set count.value = count.value + 1 %} {% endfor %} {%
+if (sub.question_number - compulsory)%2 !=0 %}
+<h4>OR</h4>
+{% endif %} {% endif %} {% endfor %}
+<br />
+<button type="submit" class="btn btn-primary">Generate paper</button>
+{% endblock %}
