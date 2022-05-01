@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 from . import db
 import json
 
-from website.models import Semester, Subject, Module, Question, Subquestion, Template
+from website.models import Semester, Subject, Module, Question, Subquestion, Template, Subquestiondetails
 
 views = Blueprint('views', __name__)
 
@@ -226,11 +226,14 @@ def createTemplate(semId, subId):
 def addSubquestion(semId, subId, tempId):
     if request.method == 'POST':
         data = request.form
+        question_dict = {}
         for key in data:
             new_question = Subquestion(question_number=key, subquestions=data[key], template_id=tempId)
             db.session.add(new_question)
             db.session.commit()
-        return redirect(url_for('views.setTemplate', semId=semId, subId=subId, tempId=tempId))
+            question_dict[key] = new_question.id
+        input = json.dumps(question_dict)
+        return redirect(url_for('views.setTemplate', semId=semId, subId=subId, tempId=tempId, params=input))
 
     temp = Template.query.filter_by(id=tempId).first()
     compul = temp.compulsoryQ
@@ -238,12 +241,26 @@ def addSubquestion(semId, subId, tempId):
     if temp:
         return render_template("subQuestions.html", user=current_user, semId=semId, subId=subId, tempId=tempId, temp=temp, compul=compul, opt=opt)
 
-@views.route('/generate/<semId>/<subId>/<tempId>/create', methods=['POST', 'GET'])
+@views.route('/generate/<semId>/<subId>/<tempId>/create/<params>', methods=['POST', 'GET'])
 @login_required
-def setTemplate(semId, subId, tempId):
+def setTemplate(semId, subId, tempId, params):
     if request.method=='POST':
-        data = request.form
-        print(data)
+        dict = json.loads(params)
+        modules = request.form.getlist('cMod')
+        marks = request.form.getlist('cMarks')
+        blooms = request.form.getlist('cCO')
+        j=0
+        for key in dict:
+            ques = Subquestion.query.filter_by(id=dict[key]).first()
+            subques = ques.subquestions
+            for i in range(subques):
+                new_subquestion = Subquestiondetails(module=modules[j], marks=marks[j], bloom=blooms[j], subquestion_of=dict[key])
+                db.session.add(new_subquestion)
+                db.session.commit()
+                j=j+1
+        return redirect(url_for('views.dashboard'))
+        
+    dict = json.loads(params)
     temp = Template.query.filter_by(id=tempId).first()
     sub = Subject.query.filter_by(id=subId).first()
     return render_template("setTemplate.html", user=current_user, subquestions=temp.subquestions, compulsory=temp.compulsoryQ, optional=temp.optionalQ, subject=sub)

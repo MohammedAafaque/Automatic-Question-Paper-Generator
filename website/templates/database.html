@@ -56,3 +56,12 @@
 </p>
 
 {% endfor %}
+
+<h1>Sub Questions Details</h1>
+{% for subque in subqueinfo %}
+<p>
+  Id:{{subque.id}}, Module:{{subque.module}}, Marks:{{subque.marks}},
+  Bloom's:{{subque.bloom}}, Subquestion of: {{subque.subquestion_of}}
+</p>
+
+{% endfor %}

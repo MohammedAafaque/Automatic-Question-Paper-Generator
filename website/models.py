@@ -4,11 +4,19 @@ from flask_login import UserMixin
 # class Subquestion(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
 
+class Subquestiondetails(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    module = db.Column(db.String(200))
+    marks = db.Column(db.Integer)
+    bloom = db.Column(db.Integer)
+    subquestion_of = db.Column(db.Integer, db.ForeignKey('subquestion.id')) 
+
 class Subquestion(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question_number = db.Column(db.Integer)
     subquestions = db.Column(db.Integer)
     template_id = db.Column(db.Integer, db.ForeignKey('template.id'))
+    subques = db.relationship('Subquestiondetails')
 
 
 class Template(db.Model):

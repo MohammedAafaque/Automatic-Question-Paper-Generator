@@ -27,19 +27,19 @@ content %}
   <h1>Question {{sub.question_number}}</h1>
   {% for i in range(sub.subquestions) %}
   <h5>{{i+1}}</h5>
-  <select name="oMod" id="oMod">
+  <select name="cMod" id="cMod">
     <option value="" disabled selected>Choose module</option>
     {% for mod in subject.mods %}
     <option value="{{ mod.module_name }}">{{ mod.module_name }}</option>
     {% endfor %}
   </select>
-  <select name="oMarks" id="oMarks">
+  <select name="cMarks" id="cMarks">
     <option value="" disabled selected>Marks</option>
     {% for i in range(21) %}
     <option value="{{i}}">{{ i }}</option>
     {% endfor %}
   </select>
-  <select name="oCO" id="oCO">
+  <select name="cCO" id="cCO">
     <option value="" disabled selected>Choose Bloom's Taxonomy Level</option>
     {% for i in range(6) %}
     <option value="{{i+1}}">{{ i+1 }}</option>
