@@ -215,7 +215,7 @@ def createTemplate(semId, subId):
             new_template = Template(name=name, totalQ=total, compulsoryQ=compulsory, optionalQ=optional, marks=marks,user_id=user.id )
             db.session.add(new_template)
             db.session.commit()
-            return redirect(url_for('views.displayTemplates', semId=semId, subId=subId))
+            return redirect(url_for('views.addSubquestion', semId=semId, subId=subId, tempId=new_template.id))
 
     sub = Subject.query.filter_by(id=subId).first()
     if sub:
@@ -258,15 +258,15 @@ def setTemplate(semId, subId, tempId, params):
                 db.session.add(new_subquestion)
                 db.session.commit()
                 j=j+1
-        return redirect(url_for('views.showTemplate', semId=semId, subId=subId, tempId=tempId, params=params))
+        return redirect(url_for('views.showTemplate', semId=semId, subId=subId, tempId=tempId))
         
     dict = json.loads(params)
     temp = Template.query.filter_by(id=tempId).first()
     sub = Subject.query.filter_by(id=subId).first()
     return render_template("setTemplate.html", user=current_user, subquestions=temp.subquestions, compulsory=temp.compulsoryQ, optional=temp.optionalQ, subject=sub)
 
-@views.route('/generate/<semId>/<subId>/<tempId>/show/<params>', methods=['POST', 'GET'])
-def showTemplate(semId, subId, tempId, params):
+@views.route('/generate/<semId>/<subId>/<tempId>/show', methods=['POST', 'GET'])
+def showTemplate(semId, subId, tempId):
     temp = Template.query.filter_by(id=tempId).first()
     sub = Subject.query.filter_by(id=subId).first()
     return render_template("showTemplate.html", user=current_user, subquestions=temp.subquestions, compulsory=temp.compulsoryQ, optional=temp.optionalQ, subject=sub)

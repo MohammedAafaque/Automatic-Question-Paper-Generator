@@ -118,7 +118,8 @@ function addTemplate(semId, subId) {
 }
 
 function addSubquestions(tempId, semId, subId) {
-  window.location.href = "/generate/" + semId + "/" + subId + "/" + tempId;
+  window.location.href =
+    "/generate/" + semId + "/" + subId + "/" + tempId + "/show";
 }
 
 function submitSubquestions(tempId, semId, subId) {
