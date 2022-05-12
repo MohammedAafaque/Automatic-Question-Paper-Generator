@@ -22,6 +22,9 @@ class Subquestion(db.Model):
 class Template(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
+    subject_code = db.Column(db.String(50))
+    duration = db.Column(db.Integer)
+    instructions = db.Column(db.String(5000))
     totalQ = db.Column(db.Integer)
     compulsoryQ = db.Column(db.Integer)
     optionalQ = db.Column(db.Integer)

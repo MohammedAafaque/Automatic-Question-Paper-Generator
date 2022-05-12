@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Paper</title>
+</head>
+<br>
+<br>
+<br>
+<body style="font-size: 15px; font-family: Arial, Helvetica, sans-serif;">
+<div style="text-align: center; line-height: 10%;">
+    <div class="header-content institution_name" style="font-size: 20px;"><h2>{{user.institution_name}}</h2></div> <br>
+    <div class="header-content department" style="font-size: 18px;"><h3>Department of {{user.department}}</h4></div>
+    <div class="header-content template" style="font-size: 15px;"><h4>{{temp.name}}</h6></div>
+</div>
+<div style="text-align: left;">
+<div><b>Course:</b> {{sub.subject_ame}}</div>
+<div><b>Course Code:</b> {{temp.subject_code}}</div>
+<div><b>Semester:</b> {{sem.sem}}</div>
+</div>
+<div style="text-align: right;">
+<div><b>Maximum marks:</b> {{temp.marks}}</div>
+<div><b>Duration:</b> {{temp.duration}} minutes</div>
+</div>
+<hr>
+<div style="text-align: center; font-size: 18px"><b>Instructions</b></div>
+<div style="text-align: center;">{{temp.instructions}}</div>
+<hr>
+
+{% set itr = namespace(value=0) %}
+<div style="font-size: 15px; float: right;"><b>Level</b></div>
+<div style="font-size: 15px; float: right; margin: 0 45px;"><b>Marks</b></div>
+
+{% for sub in subquestions %} {% if sub.question_number <=
+    compulsory %}
+    <br>
+    <div style="font-size: 15px;"><b>Question {{sub.question_number}}</b></div>
+    {% set count = namespace(value=1) %} {% for queinfo in sub.subques %}
+    <div>
+      <span>{{count.value}}. </span>
+      <span style="float: inline-start;">{{questions_list[itr.value]}}</span> <span style="float: right;"><b>LO {{queinfo.bloom}}</b></span>  <span style="float: right; margin: 0 60px;"><b>{{queinfo.marks}}</b></span> 
+    </div>
+    {% set itr.value = itr.value + 1 %} {% set count.value = count.value + 1 %} {% endfor %}{% else %}
+    <br>
+    <div style="font-size: 15px;"><b>Question {{sub.question_number}}</b></div>
+    {% set count = namespace(value=1) %} {% for queinfo in sub.subques %}
+    <div>
+        <span>{{count.value}}. </span>
+        <span style="float: inline-start;">{{questions_list[itr.value]}}</span> <span style="float: right;"><b>LO {{queinfo.bloom}}</b></span>  <span style="float: right; margin: 0 60px;"><b>{{queinfo.marks}}</b></span>  
+    </div>
+    {% set itr.value = itr.value + 1 %} {% set count.value = count.value + 1 %} {% endfor %} {%
+    if (sub.question_number - compulsory)%2 !=0 %}
+    <h4>OR</h4>
+    {% endif %} {% endif %} {% endfor %}
+
+</body>
+</html>

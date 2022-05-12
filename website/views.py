@@ -1,10 +1,11 @@
 from typing import Optional
-from flask import Blueprint, redirect, render_template, request, flash, jsonify, url_for
+from flask import Blueprint, redirect, render_template, request, flash, jsonify, url_for, Flask, make_response
 from flask_login import login_required, current_user
 from . import db
-import json
-
-from website.models import Semester, Subject, Module, Question, Subquestion, Template, Subquestiondetails
+import json, random
+import numpy as np
+import pdfkit
+from website.models import User, Semester, Subject, Module, Question, Subquestion, Template, Subquestiondetails
 
 views = Blueprint('views', __name__)
 
@@ -201,6 +202,9 @@ def displayTemplates(semId, subId):
 def createTemplate(semId, subId):
     if request.method == 'POST':
         user=current_user
+        subject_code = request.form.get('subjectCode')
+        duration = request.form.get('duration')
+        instructions = request.form.get('instructions')
         name = request.form.get('templateName')
         total = int(request.form.get('totalQuestions'))
         compulsory = int(request.form.get('compulsoryQuestions'))
@@ -212,7 +216,7 @@ def createTemplate(semId, subId):
         # elif ((compulsory+optional) != total):
         #     flash("Total questions are not equal to compulsory & optional questions", category="error")
         else:    
-            new_template = Template(name=name, totalQ=total, compulsoryQ=compulsory, optionalQ=optional, marks=marks,user_id=user.id )
+            new_template = Template(name=name, subject_code=subject_code, duration=duration, instructions=instructions, totalQ=total, compulsoryQ=compulsory, optionalQ=optional, marks=marks,user_id=user.id )
             db.session.add(new_template)
             db.session.commit()
             return redirect(url_for('views.addSubquestion', semId=semId, subId=subId, tempId=new_template.id))
@@ -267,6 +271,41 @@ def setTemplate(semId, subId, tempId, params):
 
 @views.route('/generate/<semId>/<subId>/<tempId>/show', methods=['POST', 'GET'])
 def showTemplate(semId, subId, tempId):
+    if request.method == "POST":
+        return redirect(url_for('views.questionPaper', semId=semId, subId=subId, tempId=tempId))
     temp = Template.query.filter_by(id=tempId).first()
     sub = Subject.query.filter_by(id=subId).first()
     return render_template("showTemplate.html", user=current_user, subquestions=temp.subquestions, compulsory=temp.compulsoryQ, optional=temp.optionalQ, subject=sub)
+
+@views.route('/generate/<semId>/<subId>/<tempId>/question_paper', methods=['POST', 'GET'])
+def questionPaper(semId, subId, tempId):
+    user = User.query.filter_by(id=current_user.id).first()
+    sub = Subject.query.filter_by(id=subId).first()
+    temp = Template.query.filter_by(id=tempId).first()
+    sem = Semester.query.filter_by(id=semId).first()
+    final_questions = []
+    for question in temp.subquestions:
+        for subquestion in question.subques:
+            module = Module.query.filter_by(module_name=subquestion.module).first()
+            ques = Question.query.filter_by(module_id=module.id)
+            list_of_ques = []
+            for ques in module.questions:
+                # MAIN IMPORTANT UPDATE
+                # if ques.question_category == subquestion.bloom:
+                if ques.question_category == 0:
+                    list_of_ques.append(ques.question_content)
+            ran = random.choice(list_of_ques)
+            if ran not in final_questions:
+                final_questions.append(ran)
+            else:
+                main_list = np.setdiff1d(list_of_ques, final_questions)
+                final_questions.append(random.choice(main_list))
+    # return render_template("questionPaper.html", user=current_user, temp=temp, sem=sem, sub=sub, questions=temp.subquestions, questions_list=final_questions, subquestions=temp.subquestions, compulsory=temp.compulsoryQ, optional=temp.optionalQ, subject=sub)
+
+    config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
+    rendered = render_template("questionPaper.html", user=current_user, temp=temp, sem=sem, sub=sub, questions=temp.subquestions, questions_list=final_questions, subquestions=temp.subquestions, compulsory=temp.compulsoryQ, optional=temp.optionalQ, subject=sub)
+    pdf = pdfkit.from_string(rendered, False, configuration=config)
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename=Question Paper.pdf'
+    return response

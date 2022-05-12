@@ -1,5 +1,6 @@
 {% extends "base.html" %} {% block title %} Display Template {% endblock %} {%
-block content %} {% for sub in subquestions %} {% if sub.question_number <=
+block content %}
+<form method="POST">{% for sub in subquestions %} {% if sub.question_number <=
 compulsory %}
 <h1>Question {{sub.question_number}}</h1>
 {% set count = namespace(value=1) %} {% for queinfo in sub.subques %}
@@ -22,4 +23,5 @@ if (sub.question_number - compulsory)%2 !=0 %}
 {% endif %} {% endif %} {% endfor %}
 <br />
 <button type="submit" class="btn btn-primary">Generate paper</button>
+</form> 
 {% endblock %}
