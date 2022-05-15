@@ -45,11 +45,21 @@ class Module(db.Model):
     subject_id = db.Column(db.Integer, db.ForeignKey('subject.id'))
     questions = db.relationship('Question')
 
+class MCQ(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    question = db.Column(db.String(500))
+    option1 = db.Column(db.String(200))
+    option2 = db.Column(db.String(200))
+    option3 = db.Column(db.String(200))
+    option4 = db.Column(db.String(200))
+    subject_id = db.Column(db.Integer, db.ForeignKey('subject.id'))
+
 class Subject(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     subject_ame = db.Column(db.String(200))
     semester_id = db.Column(db.Integer, db.ForeignKey('semester.id'))
     mods = db.relationship('Module')
+    mcqs = db.relationship('MCQ')
 
 class Semester(db.Model):
     id = db.Column(db.Integer, primary_key=True)

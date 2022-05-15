@@ -1,0 +1,43 @@
+{% extends "base.html" %} {% block title %} Add MCQs {% endblock %} {% block
+content %}
+<h1 align="center">MCQs</h1>
+<h1 align="center">Subject: {{sub.subject_ame}}</h1>
+<ul class="list-group list-group-flush" id="subjects">
+  {% for mcq in sub.mcqs %}
+  <li class="list-group-item">
+    <div>{{ mcq.question }}</div>
+    <span>a) {{ mcq.option1 }} </span>
+    <span>b) {{ mcq.option2 }} </span>
+    <span>c) {{ mcq.option3 }} </span>
+    <span>d) {{ mcq.option4 }} </span>
+    <button type="button" class="close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <button type="button" class="close">
+      <span aria-hidden="true">Click Me</span>
+    </button>
+  </li>
+  {% endfor %}
+</ul>
+
+<form method="POST">
+  <textarea
+    name="mcq"
+    id="mcq"
+    class="form-control"
+    placeholder="Enter question"
+  ></textarea>
+  <span>a)</span>
+  <input type="text" name="option1" required />
+  <span>b)</span>
+  <input type="text" name="option2" required />
+  <span>c)</span>
+  <input type="text" name="option3" required />
+  <span>d)</span>
+  <input type="text" name="option4" required />
+  <div align="" center>
+    <button type="submit" class="btn btn-primary">Add MCQ</button>
+  </div>
+</form>
+
+{% endblock %}

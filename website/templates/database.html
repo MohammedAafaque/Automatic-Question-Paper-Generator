@@ -22,6 +22,16 @@
 </p>
 {% endfor %}
 
+<h1>MCQs</h1>
+{% for mcq in mcqs %}
+<p>
+  Id:{{mcq.id}}, Question:{{mcq.question}}, Option 1:{{mcq.option1}}, Option
+  2:{{mcq.option2}}, Option 3:{{mcq.option3}}, Option 4:{{mcq.option4}}, Subject
+  Id: {{mcq.subject_id}}
+</p>
+
+{% endfor %}
+
 <h1>Modules</h1>
 {% for mod in mods %}
 <p>

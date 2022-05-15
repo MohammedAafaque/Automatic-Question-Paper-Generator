@@ -1,11 +1,10 @@
-from typing import Optional
 from flask import Blueprint, redirect, render_template, request, flash, jsonify, url_for, Flask, make_response
 from flask_login import login_required, current_user
 from . import db
 import json, random
 import numpy as np
 import pdfkit
-from website.models import User, Semester, Subject, Module, Question, Subquestion, Template, Subquestiondetails
+from website.models import User, Semester, Subject, Module, Question, Subquestion, Template, Subquestiondetails, MCQ
 
 views = Blueprint('views', __name__)
 
@@ -112,7 +111,26 @@ def modules(semId, subId):
 
     sub = Subject.query.filter_by(id=subId).first()
     sem = Semester.query.filter_by(id=semId).first()
-    return render_template("modules.html", user=current_user, sub=sub, sem=sem)
+    return render_template("modules.html", user=current_user, sub=sub, sem=sem, semId=semId, subId=subId)
+
+@views.route('/semester/<semId>/<subId>/mcq', methods=['GET', 'POST'])
+@login_required
+def add_mcq(semId, subId):
+    if request.method == 'POST':
+        mcq = request.form.get('mcq')
+        option1 = request.form.get('option1')
+        option2 = request.form.get('option2')
+        option3 = request.form.get('option3')
+        option4 = request.form.get('option4')
+        if len(mcq) < 1:
+            flash('MQuestion should be of at least 1 character.', category="error")
+        else:
+            new_mcq = MCQ(question=mcq, option1=option1, option2=option2, option3=option3, option4=option4, subject_id=subId)
+            db.session.add(new_mcq)
+            db.session.commit()
+            flash("MCQ added successfully!", category='success')
+    sub = Subject.query.filter_by(id=subId).first()
+    return render_template("mcq.html", user=current_user, sub=sub)
 
 @views.route('/delete-mod', methods=['POST'])
 def delete_mod():

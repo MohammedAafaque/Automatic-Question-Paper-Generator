@@ -40,7 +40,8 @@
     {% set count = namespace(value=1) %} {% for queinfo in sub.subques %}
     <div>
       <span>{{count.value}}. </span>
-      <span style="float: inline-start;">{{questions_list[itr.value]}}</span> <span style="float: right;"><b>LO {{queinfo.bloom}}</b></span>  <span style="float: right; margin: 0 60px;"><b>{{queinfo.marks}}</b></span> 
+      <span style="float: inline-start;">{{questions_list[itr.value]}}</span> <span style="float: right;"><b>LO {{queinfo.bloom}}</b></span>  <span style="float: right; margin: 0 60px
+      ;"><b>{{queinfo.marks}}</b></span> 
     </div>
     {% set itr.value = itr.value + 1 %} {% set count.value = count.value + 1 %} {% endfor %}{% else %}
     <br>
