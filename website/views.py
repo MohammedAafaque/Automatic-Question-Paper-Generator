@@ -341,12 +341,12 @@ def questionPaper(semId, subId, tempId):
             else:
                 main_list = np.setdiff1d(list_of_ques, final_questions)
                 final_questions.append(random.choice(main_list))
-    return render_template("questionPaper.html", user=current_user, temp=temp, sem=sem, sub=sub, questions=temp.subquestions, questions_list=final_questions, subquestions=temp.subquestions, compulsory=temp.compulsoryQ, optional=temp.optionalQ, subject=sub, mcq_list=mcq_list, len=len(mcq_list))
+    # return render_template("questionPaper.html", user=current_user, temp=temp, sem=sem, sub=sub, questions=temp.subquestions, questions_list=final_questions, subquestions=temp.subquestions, compulsory=temp.compulsoryQ, optional=temp.optionalQ, subject=sub, mcq_list=mcq_list, len=len(mcq_list))
 
-    # config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
-    # rendered = render_template("questionPaper.html", user=current_user, temp=temp, sem=sem, sub=sub, questions=temp.subquestions, questions_list=final_questions, subquestions=temp.subquestions, compulsory=temp.compulsoryQ, optional=temp.optionalQ, subject=sub, mcq_list=mcq_list, len=len(mcq_list))
-    # pdf = pdfkit.from_string(rendered, False, configuration=config)
-    # response = make_response(pdf)
-    # response.headers['Content-Type'] = 'application/pdf'
-    # response.headers['Content-Disposition'] = 'inline; filename=Question Paper.pdf'
-    # return response
+    config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
+    rendered = render_template("questionPaper.html", user=current_user, temp=temp, sem=sem, sub=sub, questions=temp.subquestions, questions_list=final_questions, subquestions=temp.subquestions, compulsory=temp.compulsoryQ, optional=temp.optionalQ, subject=sub, mcq_list=mcq_list, len=len(mcq_list))
+    pdf = pdfkit.from_string(rendered, False, configuration=config)
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename=Question Paper.pdf'
+    return response
