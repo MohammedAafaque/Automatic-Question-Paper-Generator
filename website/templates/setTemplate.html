@@ -1,7 +1,11 @@
 {% extends "base.html" %} {% block title %} Set Template {% endblock %} {% block
 content %}
 <form method="POST">
-  {% for sub in subquestions %} {% if sub.question_number <= compulsory %}
+  {% set mrks = marks %} {% if mcqs > 0 %}
+  <h1>Multiple Choice Questions</h1>
+  <span>Number: {{ mcqs }}</span>
+  {% endif %} {% for sub in subquestions %} {% if sub.question_number <=
+  compulsory %}
   <h1>Question {{sub.question_number}}</h1>
   {% for i in range(sub.subquestions) %}
   <h5>{{i+1}}</h5>

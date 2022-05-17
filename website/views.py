@@ -235,6 +235,7 @@ def createTemplate(semId, subId):
         duration = request.form.get('duration')
         instructions = request.form.get('instructions')
         name = request.form.get('templateName')
+        mcqs = request.form.get('mcqs')
         total = int(request.form.get('totalQuestions'))
         compulsory = int(request.form.get('compulsoryQuestions'))
         optional = int(request.form.get('optionalQuestions'))
@@ -245,7 +246,7 @@ def createTemplate(semId, subId):
         # elif ((compulsory+optional) != total):
         #     flash("Total questions are not equal to compulsory & optional questions", category="error")
         else:    
-            new_template = Template(name=name, subject_code=subject_code, duration=duration, instructions=instructions, totalQ=total, compulsoryQ=compulsory, optionalQ=optional, marks=marks,user_id=user.id )
+            new_template = Template(name=name, subject_code=subject_code, duration=duration, instructions=instructions, totalQ=total, compulsoryQ=compulsory, optionalQ=optional, marks=marks,user_id=user.id, mcqs=mcqs )
             db.session.add(new_template)
             db.session.commit()
             return redirect(url_for('views.addSubquestion', semId=semId, subId=subId, tempId=new_template.id))
@@ -258,6 +259,7 @@ def createTemplate(semId, subId):
 @login_required
 def addSubquestion(semId, subId, tempId):
     if request.method == 'POST':
+        temp = Template.query.filter_by(id=tempId).first()
         data = request.form
         question_dict = {}
         for key in data:
@@ -266,7 +268,7 @@ def addSubquestion(semId, subId, tempId):
             db.session.commit()
             question_dict[key] = new_question.id
         input = json.dumps(question_dict)
-        return redirect(url_for('views.setTemplate', semId=semId, subId=subId, tempId=tempId, params=input))
+        return redirect(url_for('views.setTemplate', semId=semId, subId=subId, tempId=tempId, params=input, temp=temp))
 
     temp = Template.query.filter_by(id=tempId).first()
     compul = temp.compulsoryQ
@@ -296,7 +298,7 @@ def setTemplate(semId, subId, tempId, params):
     dict = json.loads(params)
     temp = Template.query.filter_by(id=tempId).first()
     sub = Subject.query.filter_by(id=subId).first()
-    return render_template("setTemplate.html", user=current_user, subquestions=temp.subquestions, compulsory=temp.compulsoryQ, optional=temp.optionalQ, subject=sub)
+    return render_template("setTemplate.html", user=current_user, subquestions=temp.subquestions, compulsory=temp.compulsoryQ, optional=temp.optionalQ, subject=sub, mcqs=temp.mcqs, marks=temp.marks)
 
 @views.route('/generate/<semId>/<subId>/<tempId>/show', methods=['POST', 'GET'])
 def showTemplate(semId, subId, tempId):
@@ -304,7 +306,7 @@ def showTemplate(semId, subId, tempId):
         return redirect(url_for('views.questionPaper', semId=semId, subId=subId, tempId=tempId))
     temp = Template.query.filter_by(id=tempId).first()
     sub = Subject.query.filter_by(id=subId).first()
-    return render_template("showTemplate.html", user=current_user, subquestions=temp.subquestions, compulsory=temp.compulsoryQ, optional=temp.optionalQ, subject=sub)
+    return render_template("showTemplate.html", user=current_user, subquestions=temp.subquestions, compulsory=temp.compulsoryQ, optional=temp.optionalQ, subject=sub, mcqs=temp.mcqs)
 
 @views.route('/generate/<semId>/<subId>/<tempId>/question_paper', methods=['POST', 'GET'])
 def questionPaper(semId, subId, tempId):
@@ -312,7 +314,17 @@ def questionPaper(semId, subId, tempId):
     sub = Subject.query.filter_by(id=subId).first()
     temp = Template.query.filter_by(id=tempId).first()
     sem = Semester.query.filter_by(id=semId).first()
+    total_mcqs = temp.mcqs
+    mcqs = sub.mcqs
     final_questions = []
+    mcq_list = []
+    if total_mcqs>0:
+        for i in random.sample(sub.mcqs, total_mcqs):
+            mcq_list.append(i)
+        print(mcq_list)
+    # for mcq in mcqs:
+    #     print(mcq.question, mcq.option1, mcq.option2, mcq.option3, mcq.option4)
+    
     for question in temp.subquestions:
         for subquestion in question.subques:
             module = Module.query.filter_by(module_name=subquestion.module).first()
@@ -329,12 +341,12 @@ def questionPaper(semId, subId, tempId):
             else:
                 main_list = np.setdiff1d(list_of_ques, final_questions)
                 final_questions.append(random.choice(main_list))
-    # return render_template("questionPaper.html", user=current_user, temp=temp, sem=sem, sub=sub, questions=temp.subquestions, questions_list=final_questions, subquestions=temp.subquestions, compulsory=temp.compulsoryQ, optional=temp.optionalQ, subject=sub)
+    return render_template("questionPaper.html", user=current_user, temp=temp, sem=sem, sub=sub, questions=temp.subquestions, questions_list=final_questions, subquestions=temp.subquestions, compulsory=temp.compulsoryQ, optional=temp.optionalQ, subject=sub, mcq_list=mcq_list, len=len(mcq_list))
 
-    config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
-    rendered = render_template("questionPaper.html", user=current_user, temp=temp, sem=sem, sub=sub, questions=temp.subquestions, questions_list=final_questions, subquestions=temp.subquestions, compulsory=temp.compulsoryQ, optional=temp.optionalQ, subject=sub)
-    pdf = pdfkit.from_string(rendered, False, configuration=config)
-    response = make_response(pdf)
-    response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = 'inline; filename=Question Paper.pdf'
-    return response
+    # config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
+    # rendered = render_template("questionPaper.html", user=current_user, temp=temp, sem=sem, sub=sub, questions=temp.subquestions, questions_list=final_questions, subquestions=temp.subquestions, compulsory=temp.compulsoryQ, optional=temp.optionalQ, subject=sub, mcq_list=mcq_list, len=len(mcq_list))
+    # pdf = pdfkit.from_string(rendered, False, configuration=config)
+    # response = make_response(pdf)
+    # response.headers['Content-Type'] = 'application/pdf'
+    # response.headers['Content-Disposition'] = 'inline; filename=Question Paper.pdf'
+    # return response

@@ -33,6 +33,20 @@
 <div style="font-size: 15px; float: right;"><b>Level</b></div>
 <div style="font-size: 15px; float: right; margin: 0 45px;"><b>Marks</b></div>
 
+{% if len>0 %}
+<div style="font-size: 15px;"><b>Multiple Choice Questions</b></div>
+<div style="font-size: 15px; float: right; margin: 0 95px;"><b>{{len}}</b></div>
+{% for i in mcq_list %}
+<br>
+<div>{{i.question}}</div>
+<span style="margin: 0px 5px;">a) {{i.option1}}</span>
+<span style="margin: 0px 5px;">b) {{i.option2}}</span>
+<span style="margin: 0px 5px;">c) {{i.option3}}</span>
+<span style="margin: 0px 5px;">d) {{i.option4}}</span>
+<br>
+{% endfor %}
+{% endif %}
+<br>
 {% for sub in subquestions %} {% if sub.question_number <=
     compulsory %}
     <br>

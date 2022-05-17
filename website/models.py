@@ -25,6 +25,7 @@ class Template(db.Model):
     subject_code = db.Column(db.String(50))
     duration = db.Column(db.Integer)
     instructions = db.Column(db.String(5000))
+    mcqs = db.Column(db.Integer)
     totalQ = db.Column(db.Integer)
     compulsoryQ = db.Column(db.Integer)
     optionalQ = db.Column(db.Integer)

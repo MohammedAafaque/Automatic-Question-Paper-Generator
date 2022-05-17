@@ -1,6 +1,10 @@
 {% extends "base.html" %} {% block title %} Display Template {% endblock %} {%
 block content %}
-<form method="POST">{% for sub in subquestions %} {% if sub.question_number <=
+<form method="POST">
+{% if mcqs>0 %}
+<h1>MCQs</h1>
+<div>Number of MCQs:{{ mcqs }} </div>
+{% endif %}{% for sub in subquestions %} {% if sub.question_number <=
 compulsory %}
 <h1>Question {{sub.question_number}}</h1>
 {% set count = namespace(value=1) %} {% for queinfo in sub.subques %}
