@@ -134,3 +134,12 @@ function submitSubquestions(tempId, semId, subId) {
   window.location.href =
     "/generate/" + semId + "/" + subId + "/" + tempId + "/create";
 }
+
+function deleteTemplate(tempId, semId, subId) {
+  fetch("/delete-template", {
+    method: "POST",
+    body: JSON.stringify({ tempId: tempId }),
+  }).then((_res) => {
+    window.location.href = "/generate/" + semId + "/" + subId;
+  });
+}

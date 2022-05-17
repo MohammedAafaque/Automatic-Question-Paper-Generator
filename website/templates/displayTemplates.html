@@ -5,6 +5,13 @@ block content %}
   <div onClick="addSubquestions({{temp.id}}, {{semId}}, {{subId}})">
     {{ temp.name }}
   </div>
+  <button
+    type="button"
+    class="close"
+    onClick="deleteTemplate({{ temp.id }}, {{ semId }}, {{subId}})"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button>
   {% endfor %}
   <div onClick="addTemplate({{semId}}, {{subId}})">Add template</div>
 </div>

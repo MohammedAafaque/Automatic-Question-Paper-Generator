@@ -226,6 +226,17 @@ def displayTemplates(semId, subId):
     # temps = Template.query.filter_by(user_id=current_user.id)
     # return render_template("displayTemplates.html", user=current_user, temps=temps, semId=semId, subId=subId)
 
+@views.route('/delete-template', methods=['POST'])
+@login_required
+def delete_template():
+    temp = json.loads(request.data)
+    tempId = temp['tempId']
+    temp = Template.query.get(tempId)
+    if temp:
+            db.session.delete(temp)
+            db.session.commit()
+    return jsonify({})
+
 @views.route('/generate/<semId>/<subId>/create', methods=['GET', 'POST'])
 @login_required
 def createTemplate(semId, subId):
