@@ -130,7 +130,18 @@ def add_mcq(semId, subId):
             db.session.commit()
             flash("MCQ added successfully!", category='success')
     sub = Subject.query.filter_by(id=subId).first()
-    return render_template("mcq.html", user=current_user, sub=sub)
+    return render_template("mcq.html", user=current_user, sub=sub, subId=subId, semId=semId)
+
+
+@views.route('/delete-mcq', methods=['POST'])
+def delete_mcq():
+    mcq = json.loads(request.data)
+    mcqId = mcq['mcqId']
+    mcq = MCQ.query.get(mcqId)
+    if mcq:
+            db.session.delete(mcq)
+            db.session.commit()
+    return jsonify({})
 
 @views.route('/delete-mod', methods=['POST'])
 def delete_mod():

@@ -10,11 +10,12 @@ content %}
     <span>b) {{ mcq.option2 }} </span>
     <span>c) {{ mcq.option3 }} </span>
     <span>d) {{ mcq.option4 }} </span>
-    <button type="button" class="close">
+    <button
+      type="button"
+      class="close"
+      onClick="deleteMCQ({{ mcq.id }}, {{ subId }}, {{ semId }})"
+    >
       <span aria-hidden="true">&times;</span>
-    </button>
-    <button type="button" class="close">
-      <span aria-hidden="true">Click Me</span>
     </button>
   </li>
   {% endfor %}

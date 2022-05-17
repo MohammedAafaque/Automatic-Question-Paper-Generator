@@ -81,6 +81,14 @@ function deleteQuestion(quesId, modId, semId, subId) {
     window.location.href = "/semester/" + semId + "/" + subId + "/" + modId;
   });
 }
+function deleteMCQ(mcqId, subId, semId) {
+  fetch("/delete-mcq", {
+    method: "POST",
+    body: JSON.stringify({ mcqId: mcqId }),
+  }).then((_res) => {
+    window.location.href = "/semester/" + semId + "/" + subId + "/mcq";
+  });
+}
 
 function updateQuestion(quesId, modId, semId, subId) {
   const updatedQuestion = window.prompt("Enter Updated Question");
