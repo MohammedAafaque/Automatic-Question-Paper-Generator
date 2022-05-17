@@ -105,6 +105,23 @@ function updateQuestion(quesId, modId, semId, subId) {
   }
 }
 
+function updateQuestionCategory(quesId, modId, semId, subId) {
+  const updatedQuestionCategory = window.prompt(
+    "Enter Updated Question Category"
+  );
+  if (updatedQuestionCategory) {
+    fetch("/update-question-category", {
+      method: "POST",
+      body: JSON.stringify({
+        quesId: quesId,
+        updatedQuestionCategory: updatedQuestionCategory,
+      }),
+    }).then((_res) => {
+      window.location.href = "/semester/" + semId + "/" + subId + "/" + modId;
+    });
+  }
+}
+
 function goToSem() {
   window.location.href = "/semester";
 }

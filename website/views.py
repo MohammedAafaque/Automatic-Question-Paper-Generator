@@ -205,6 +205,18 @@ def update_question():
             db.session.commit()
     return jsonify({})
 
+@views.route('/update-question-category', methods=['POST'])
+@login_required
+def update_question_category():
+    newQues = json.loads(request.data)
+    quesId = newQues['quesId']
+    updatedField = newQues['updatedQuestionCategory']
+    ques = Question.query.get(quesId)
+    if ques:
+            ques.question_category = updatedField
+            db.session.commit()
+    return jsonify({})
+
 @views.route('/generate')
 @login_required
 def generate():
@@ -343,8 +355,8 @@ def questionPaper(semId, subId, tempId):
             list_of_ques = []
             for ques in module.questions:
                 # MAIN IMPORTANT UPDATE
-                # if ques.question_category == subquestion.bloom:
-                if ques.question_category == 0:
+                if ques.question_category == subquestion.bloom:
+                # if ques.question_category == 0:
                     list_of_ques.append(ques.question_content)
             ran = random.choice(list_of_ques)
             if ran not in final_questions:

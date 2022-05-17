@@ -8,7 +8,7 @@ content %}
     <!-- <div
       onClick="showQuestions({{mod.id}}, {{ mod.subject_id }}, {{ sem.id }})"
     > -->
-    {{ ques.question_content }}
+    <span>{{ ques.question_content }}</span>
     <!-- </div> -->
     <button
       type="button"
@@ -21,6 +21,15 @@ content %}
       type="button"
       class="close"
       onClick="updateQuestion({{ ques.id }}, {{ ques.module_id }}, {{ sem.id }}, {{ sub.id }})"
+    >
+      <span aria-hidden="true">Click Me</span>
+    </button>
+    <span style="float: right">{{ ques.question_category }}</span>
+    <button
+      type="button"
+      class="close"
+      onClick="updateQuestionCategory({{ ques.id }}, {{ ques.module_id }}, {{ sem.id }}, {{ sub.id }})"
+      style="float: right; margin: 0px 15px"
     >
       <span aria-hidden="true">Click Me</span>
     </button>
